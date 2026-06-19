@@ -2,12 +2,8 @@ import { readdir, open, readFile } from "node:fs/promises";
 import http from "node:http";
 import mime from "mime-types";
 
-console.log(mime.contentType("hello.txt"));
-console.log(mime.contentType("test.mp4"));
-console.log(mime.contentType("abc.pdf"));
-console.log(mime.contentType("river.webp"));
-
 const server = http.createServer(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   if (req.url === "/favicon.ico") return res.end("No favicon");
   if (req.url === "/") {
     serveDirectory(req, res);
@@ -15,7 +11,7 @@ const server = http.createServer(async (req, res) => {
     try {
       const [url, queryString] = req.url.split("?");
       const queryParam = {};
-      queryString.split("&").forEach((pair) => {
+      queryString?.split("&").forEach((pair) => {
         const [key, value] = pair.split("=");
         queryParam[key] = value;
       });
@@ -46,14 +42,10 @@ const server = http.createServer(async (req, res) => {
 });
 
 async function serveDirectory(req, res) {
+  const [url] = req.url.split("?");
   const itemsList = await readdir(`./storage${req.url}`);
-  let dynamicHtml = "";
-  itemsList.forEach((item) => {
-    dynamicHtml += `${item} <a href = ".${req.url === "/" ? "" : req.url}/${item}?action=open">Open</a>
-     <a href = ".${req.url === "/" ? "" : req.url}/${item}?action=download">Download</a><br>`;
-  });
-  const htmlBoilerPlate = await readFile("./boilerplate.html", "utf-8");
-  res.end(htmlBoilerPlate.replace("${dynamicHtml}", dynamicHtml));
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify(itemsList));
 }
 
 server.listen(80, "0.0.0.0", () => {
