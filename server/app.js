@@ -2,10 +2,12 @@ import { readdir, open, readFile } from "node:fs/promises";
 import http from "node:http";
 import mime from "mime-types";
 import { createWriteStream } from "node:fs";
+import { rm } from "node:fs/promises";
 
 const server = http.createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "*");
+  res.setHeader("Access-Control-Allow-Methods", "*");
   if (req.url === "/favicon.ico") return res.end("No favicon");
   if (req.method === "GET") {
     if (req.url === "/") {
@@ -50,7 +52,18 @@ const server = http.createServer(async (req, res) => {
       writeStream.write(chunk);
     });
     req.on("end", () => {
+      writeStream.end();
       res.end("File uploaded on the server.");
+    });
+  } else if (req.method === "DELETE") {
+    req.on("data", async (chunk) => {
+      try {
+        const filename = chunk.toString();
+        await rm(`./storage/${filename}`);
+        res.end("File deleted successfully.");
+      } catch (err) {
+        res.end(err.message);
+      }
     });
   }
 });
