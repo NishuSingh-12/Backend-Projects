@@ -1,4 +1,4 @@
-import { readdir, open, readFile } from "node:fs/promises";
+import { readdir, open, readFile, rename } from "node:fs/promises";
 import http from "node:http";
 import mime from "mime-types";
 import { createWriteStream } from "node:fs";
@@ -65,6 +65,16 @@ const server = http.createServer(async (req, res) => {
         res.end(err.message);
       }
     });
+  } else if (req.method === "PATCH") {
+    req.on("data", async (chunk) => {
+      const data = JSON.parse(chunk.toString());
+      await rename(
+        `./storage/${data.oldFilename}`,
+        `./storage/${data.newFileName}`,
+      );
+      res.end("File Renamed");
+    });
+    res.end("Patched");
   }
 });
 
