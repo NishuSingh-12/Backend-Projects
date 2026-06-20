@@ -4,19 +4,23 @@ function App() {
   const [directoryItems, setDirectoryItems] = useState([]);
   const [progress, setProgress] = useState(0);
   const [newFileName, setNewFileName] = useState("");
+  const URL = "http://[2406:7400:93:ce50:8767:d02c:6a68:1dba]/";
+
   async function getDirectoryItems() {
-    const response = await fetch("http://192.168.2.102/");
+    const response = await fetch(URL);
     const data = await response.json();
     setDirectoryItems(data);
   }
+
   useEffect(() => {
     getDirectoryItems();
   }, []);
+
   function uploadFile(e) {
     const file = e.target.files[0];
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://192.168.2.102/", true);
+    xhr.open("POST", URL, true);
     xhr.setRequestHeader("filename", file.name);
     xhr.addEventListener("load", () => {
       console.log(xhr.response);
@@ -29,9 +33,9 @@ function App() {
     });
     xhr.send(file);
   }
+
   async function handleDelete(filename) {
-    console.log(filename);
-    const response = await fetch("http://192.168.2.102/delete", {
+    const response = await fetch(URL, {
       method: "DELETE",
       body: filename,
     });
@@ -39,13 +43,14 @@ function App() {
     console.log(data);
     getDirectoryItems();
   }
+
   async function renameFile(oldFilename) {
-    console.log({ oldFilename, newFileName });
     setNewFileName(oldFilename);
   }
+
   async function saveFileName(oldFilename) {
     setNewFileName(oldFilename);
-    const response = await fetch("http://192.168.2.102/", {
+    const response = await fetch(URL, {
       method: "PATCH",
       body: JSON.stringify({ oldFilename, newFileName }),
     });
@@ -54,6 +59,7 @@ function App() {
     setNewFileName("");
     getDirectoryItems();
   }
+
   return (
     <>
       <h1>My Files</h1>
@@ -67,9 +73,9 @@ function App() {
       {directoryItems.map((item, i) => (
         <div key={i}>
           {item}
-          <a href={`http://192.168.2.102/${item}?action=open`}>Open</a>
+          <a href={`${URL}${item}?action=open`}>Open</a>
 
-          <a href={`http://192.168.2.102/${item}?action=download`}>Download</a>
+          <a href={`${URL}${item}?action=download`}>Download</a>
           <button
             onClick={() => {
               renameFile(item);
