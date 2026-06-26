@@ -4,7 +4,7 @@ function App() {
   const [directoryItems, setDirectoryItems] = useState([]);
   const [progress, setProgress] = useState(0);
   const [newFileName, setNewFileName] = useState("");
-  const URL = "http://[2406:7400:93:ce50:8767:d02c:6a68:1dba]/";
+  const URL = "http://192.168.2.102:4000/";
 
   async function getDirectoryItems() {
     const response = await fetch(URL);
