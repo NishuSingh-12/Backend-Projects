@@ -1,4 +1,5 @@
 import express from "express";
+import { createWriteStream } from "fs";
 import { readdir, rename, rm } from "fs/promises";
 
 const app = express();
@@ -13,6 +14,14 @@ app.use((req, res, next) => {
   });
 
   next();
+});
+
+app.post("/:filename", (req, res) => {
+  const writeStream = createWriteStream(`./storage/${req.params.filename}`);
+  req.pipe(writeStream);
+  req.on("end", () => {
+    res.json({ message: "File Uploaded" });
+  });
 });
 
 // Serving File
