@@ -10,10 +10,11 @@ app.use(express.json());
 app.use(cors());
 
 // Read
-app.get("/directory{/:dirname}", async (req, res) => {
-  const { dirname } = req.params;
+app.get("/directory{/*path}", async (req, res) => {
+  const { path: segments = [] } = req.params;
+  const dirname = segments.join("/");
   console.log(dirname);
-  const fullDirPath = `./storage/${dirname}`;
+  const fullDirPath = `./storage/${dirname ? dirname : ""}`;
   const filesList = await readdir(fullDirPath);
   const resdata = [];
   for (const item of filesList) {
@@ -24,8 +25,10 @@ app.get("/directory{/:dirname}", async (req, res) => {
 });
 
 //Create
-app.post("/files/:filename", (req, res) => {
-  const writeStream = createWriteStream(`./storage/${req.params.filename}`);
+app.post("/files/*path", (req, res) => {
+  const { path: segments } = req.params;
+  const filePath = segments.join("/");
+  const writeStream = createWriteStream(`./storage/${filePath}`);
   req.pipe(writeStream);
   req.on("end", () => {
     res.json({ message: "File Uploaded" });
@@ -33,30 +36,33 @@ app.post("/files/:filename", (req, res) => {
 });
 
 // Serving File
-app.get("/files/:filename", (req, res) => {
-  const { filename } = req.params;
+app.get("/files/*path", (req, res) => {
+  const { path: segments } = req.params;
+  const filePath = segments.join("/");
   if (req.query.action === "download") {
     res.set("Content-Disposition", "attachment");
   }
-  res.sendFile(`${import.meta.dirname}/storage/${filename}`);
+  res.sendFile(`${import.meta.dirname}/storage/${filePath}`);
 });
 
 // Delete File
-app.delete("/files/:filename", async (req, res) => {
-  const { filename } = req.params;
-  const filePath = `./storage/${filename}`;
+app.delete("/files/*path", async (req, res) => {
+  const { path: segments } = req.params;
+  const filePath = segments.join("/");
+
   try {
-    await rm(filePath);
+    await rm(`./storage/${filePath}`, { recursive: true });
     res.json({ message: "File Deleted Successfully." });
   } catch (err) {
-    res.status(404).json({ message: "File not found!" });
+    res.status(404).json({ message: err.message });
   }
 });
 
 // Rename File
-app.patch("/files/:filename", async (req, res) => {
-  const { filename } = req.params;
-  await rename(`./storage/${filename}`, `./storage/${req.body.newFileName}`);
+app.patch("/files/*path", async (req, res) => {
+  const { path: segments } = req.params;
+  const filePath = segments.join("/");
+  await rename(`./storage/${filePath}`, `./storage/${req.body.newFileName}`);
   res.json({ message: "Renamed" });
 });
 
