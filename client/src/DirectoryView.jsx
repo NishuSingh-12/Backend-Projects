@@ -6,7 +6,7 @@ function DirectoryView() {
   const [progress, setProgress] = useState(0);
   const [newFileName, setNewFileName] = useState("");
   const [newDirName, setNewDirName] = useState("");
-  const BASE_URL = "http://192.168.2.102:4000";
+  const BASE_URL = "http://192.168.2.100:4000";
   const { "*": dirPath } = useParams();
 
   async function getDirectoryItems() {
