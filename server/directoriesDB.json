@@ -2,11 +2,12 @@
   {
     "id": "b27d801f-ae0e-4ce8-a24c-fac5d206b4fe",
     "name": "root",
-    "parentDir": null,
+    "parentDirId": null,
     "files": [
       "16c0e892-33d5-4034-b4c5-5ace2ffdc579",
       "22afec83-3593-4b74-a0d0-f3fd2ae751c2",
-      "f9bcf8af-5d11-49e9-ab4e-0272c329e2c6"
+      "878baa30-92bb-4237-b97e-7315c6d1b1ed",
+      "4179f54d-34d7-4749-9bfc-9cdd5124d0bd"
     ],
     "directories": []
   }
