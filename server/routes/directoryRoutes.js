@@ -4,7 +4,6 @@ import path from "path";
 import { error } from "console";
 
 const router = express.Router();
-console.log(router);
 
 // Read
 router.get("{/*path}", async (req, res) => {
