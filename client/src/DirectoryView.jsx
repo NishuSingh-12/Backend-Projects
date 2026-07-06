@@ -46,6 +46,14 @@ function DirectoryView() {
     console.log(data);
     getDirectoryItems();
   }
+  async function handleDeleteDir(dirID) {
+    const response = await fetch(`${BASE_URL}/directory/${dirID}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
+    console.log(data);
+    getDirectoryItems();
+  }
 
   async function renameFile(oldFilename) {
     console.log({ oldFilename, newFilename });
@@ -53,13 +61,26 @@ function DirectoryView() {
   }
 
   async function saveFilename(fileId) {
-    np;
     const response = await fetch(`${BASE_URL}/file/${fileId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ newFilename }),
+    });
+    const data = await response.text();
+    console.log(data);
+    setNewFilename("");
+    getDirectoryItems();
+  }
+
+  async function saveDir(dirId) {
+    const response = await fetch(`${BASE_URL}/directory/${dirId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newDirName: newFilename }),
     });
     const data = await response.text();
     console.log(data);
@@ -104,10 +125,10 @@ function DirectoryView() {
         <div key={id}>
           {name} <Link to={`/directory/${id}`}>Open</Link>{" "}
           <button onClick={() => renameFile(name)}>Rename</button>
-          <button onClick={() => saveFilename(id)}>Save</button>
+          <button onClick={() => saveDir(id)}>Save</button>
           <button
             onClick={() => {
-              handleDelete(id);
+              handleDeleteDir(id);
             }}
           >
             Delete
