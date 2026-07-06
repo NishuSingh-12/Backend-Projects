@@ -2,38 +2,35 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 function DirectoryView() {
+  const BASE_URL = "http://localhost:4000";
   const [directoryItems, setDirectoryItems] = useState([]);
   const [directoriesList, setDirectoriesList] = useState([]);
   const [filesList, setFilesList] = useState([]);
   const [progress, setProgress] = useState(0);
-  const [newFileName, setNewFileName] = useState("");
-  const [newDirName, setNewDirName] = useState("");
-  const BASE_URL = "http://192.168.2.100:4000";
-  const { "*": dirPath } = useParams();
+  const [newFilename, setNewFilename] = useState("");
+  const [newDirname, setNewDirname] = useState("");
+  const { dirId } = useParams();
 
   async function getDirectoryItems() {
-    const response = await fetch(`${BASE_URL}/directory/${dirPath}`);
+    const response = await fetch(`${BASE_URL}/directory/${dirId || ""}`);
     const data = await response.json();
     // setDirectoryItems(data);
     setDirectoriesList(data.directories);
     setFilesList(data.files);
   }
-
   useEffect(() => {
     getDirectoryItems();
-  }, [dirPath]);
+  }, [dirId]);
 
-  function uploadFile(e) {
+  async function uploadFile(e) {
     const file = e.target.files[0];
-
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${BASE_URL}/file/${file.name}`, true);
-    // xhr.setRequestHeader("parentdirid",null)
+    xhr.open("POST", `${BASE_URL}/file/${dirId || ""}`, true);
+    xhr.setRequestHeader("filename", file.name);
     xhr.addEventListener("load", () => {
       console.log(xhr.response);
       getDirectoryItems();
     });
-
     xhr.upload.addEventListener("progress", (e) => {
       const totalProgress = (e.loaded / e.total) * 100;
       setProgress(totalProgress.toFixed(2));
@@ -51,32 +48,37 @@ function DirectoryView() {
   }
 
   async function renameFile(oldFilename) {
-    setNewFileName(oldFilename);
+    console.log({ oldFilename, newFilename });
+    setNewFilename(oldFilename);
   }
 
-  async function saveFileName(fileId) {
+  async function saveFilename(fileId) {
+    np;
     const response = await fetch(`${BASE_URL}/file/${fileId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ newFileName }),
+      body: JSON.stringify({ newFilename }),
     });
     const data = await response.text();
     console.log(data);
-    setNewFileName("");
+    setNewFilename("");
     getDirectoryItems();
   }
 
   async function handleCreateDirectory(e) {
     e.preventDefault();
-    const url = `${BASE_URL}/directory${dirPath ? "/" + dirPath : ""}/${newDirName}`;
+    const url = `${BASE_URL}/directory/${dirId || ""}`;
     const response = await fetch(url, {
       method: "POST",
+      headers: {
+        dirname: newDirname,
+      },
     });
     const data = await response.json();
     console.log(data);
-    setNewDirName("");
+    setNewDirname("");
     getDirectoryItems();
   }
 
@@ -86,38 +88,39 @@ function DirectoryView() {
       <input type="file" onChange={uploadFile} />
       <input
         type="text"
-        onChange={(e) => setNewFileName(e.target.value)}
-        value={newFileName}
+        onChange={(e) => setNewFilename(e.target.value)}
+        value={newFilename}
       />
-      <p>Progress:{progress}%</p>
+      <p>Progress: {progress}%</p>
       <form onSubmit={handleCreateDirectory}>
         <input
           type="text"
-          onChange={(e) => setNewDirName(e.target.value)}
-          value={newDirName}
+          onChange={(e) => setNewDirname(e.target.value)}
+          value={newDirname}
         />
         <button>Create Folder</button>
       </form>
+      {directoriesList.map(({ name, id }) => (
+        <div key={id}>
+          {name} <Link to={`/directory/${id}`}>Open</Link>{" "}
+          <button onClick={() => renameFile(name)}>Rename</button>
+          <button onClick={() => saveFilename(id)}>Save</button>
+          <button
+            onClick={() => {
+              handleDelete(id);
+            }}
+          >
+            Delete
+          </button>
+          <br />
+        </div>
+      ))}
       {filesList.map(({ name, id }) => (
         <div key={id}>
-          {name} {""}
-          <a href={`${BASE_URL}/file/${id}`}>Open</a>
-          {""}
+          {name} <a href={`${BASE_URL}/file/${id}`}>Open</a>{" "}
           <a href={`${BASE_URL}/file/${id}?action=download`}>Download</a>
-          <button
-            onClick={() => {
-              renameFile(name);
-            }}
-          >
-            Rename
-          </button>
-          <button
-            onClick={() => {
-              saveFileName(id);
-            }}
-          >
-            Save
-          </button>
+          <button onClick={() => renameFile(name)}>Rename</button>
+          <button onClick={() => saveFilename(id)}>Save</button>
           <button
             onClick={() => {
               handleDelete(id);

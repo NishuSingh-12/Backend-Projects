@@ -1,14 +1,1 @@
-[
-  {
-    "id": "b27d801f-ae0e-4ce8-a24c-fac5d206b4fe",
-    "name": "root",
-    "parentDirId": null,
-    "files": [
-      "16c0e892-33d5-4034-b4c5-5ace2ffdc579",
-      "22afec83-3593-4b74-a0d0-f3fd2ae751c2",
-      "878baa30-92bb-4237-b97e-7315c6d1b1ed",
-      "4179f54d-34d7-4749-9bfc-9cdd5124d0bd"
-    ],
-    "directories": []
-  }
-]
+[{"id":"a965303d-2899-48f9-902b-bd1992d06778","name":"root","parentDirId":null,"files":["7fbfa717-3f55-45b6-84da-7ddfac49251f","797379a8-1faa-4448-91e3-da1da2dd4d70","b253298d-02f7-4c67-bed2-95b89008aea9","350d2280-fb3a-4687-9753-50839c0c0aa4","2dc34bae-694e-4580-a9d1-3f52f4966fa9","d6d7b423-ba4b-48a8-b43b-05b7b42da70b"],"directories":["161eee25-7352-430c-a4c2-a548cf949c8c","11c53b9b-dc88-4221-b441-8c8c4966756c","00308f47-1514-4ead-a29c-1eaaed559c96"]},{"id":"161eee25-7352-430c-a4c2-a548cf949c8c","name":"hi","parentDirId":"a965303d-2899-48f9-902b-bd1992d06778","files":[],"directories":[]},{"id":"11c53b9b-dc88-4221-b441-8c8c4966756c","name":"hi","parentDirId":"a965303d-2899-48f9-902b-bd1992d06778","files":[],"directories":[]},{"id":"00308f47-1514-4ead-a29c-1eaaed559c96","name":"test","parentDirId":"a965303d-2899-48f9-902b-bd1992d06778","files":[],"directories":["7feacf43-75d9-4153-80e5-abdcab8c0d84","4291e56f-c1d9-4936-99c6-7ec1a27c1be1"]},{"id":"7feacf43-75d9-4153-80e5-abdcab8c0d84","name":"abc","parentDirId":"00308f47-1514-4ead-a29c-1eaaed559c96","files":[],"directories":[]},{"id":"4291e56f-c1d9-4936-99c6-7ec1a27c1be1","name":"xyz","parentDirId":"00308f47-1514-4ead-a29c-1eaaed559c96","files":[],"directories":[]}]
