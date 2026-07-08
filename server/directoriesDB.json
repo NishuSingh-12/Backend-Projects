@@ -1,1 +1,10 @@
-[{"id":"a965303d-2899-48f9-902b-bd1992d06778","name":"root","parentDirId":null,"files":["7fbfa717-3f55-45b6-84da-7ddfac49251f","797379a8-1faa-4448-91e3-da1da2dd4d70","b253298d-02f7-4c67-bed2-95b89008aea9","350d2280-fb3a-4687-9753-50839c0c0aa4","2dc34bae-694e-4580-a9d1-3f52f4966fa9","d6d7b423-ba4b-48a8-b43b-05b7b42da70b"],"directories":["161eee25-7352-430c-a4c2-a548cf949c8c","00308f47-1514-4ead-a29c-1eaaed559c96","53fc0382-b7f6-483c-8a39-012b9213709a"]},{"id":"161eee25-7352-430c-a4c2-a548cf949c8c","name":"heyy","parentDirId":"a965303d-2899-48f9-902b-bd1992d06778","files":[],"directories":[]},{"id":"00308f47-1514-4ead-a29c-1eaaed559c96","name":"test","parentDirId":"a965303d-2899-48f9-902b-bd1992d06778","files":[],"directories":["7feacf43-75d9-4153-80e5-abdcab8c0d84","4291e56f-c1d9-4936-99c6-7ec1a27c1be1"]},{"id":"7feacf43-75d9-4153-80e5-abdcab8c0d84","name":"abc","parentDirId":"00308f47-1514-4ead-a29c-1eaaed559c96","files":[],"directories":[]},{"id":"4291e56f-c1d9-4936-99c6-7ec1a27c1be1","name":"xyz","parentDirId":"00308f47-1514-4ead-a29c-1eaaed559c96","files":[],"directories":[]},{"id":"53fc0382-b7f6-483c-8a39-012b9213709a","name":"","parentDirId":"a965303d-2899-48f9-902b-bd1992d06778","files":[],"directories":[]}]
+[
+  {
+    "id": "ab22b4bc-c3f5-4237-ae57-234e392f00d4",
+    "name": "root-Nishu@gmail.com",
+    "userId": "d5f85a7d-2989-48d2-8746-d6c2c7d770bc",
+    "parentDirId": null,
+    "files": [],
+    "directories": []
+  }
+]
