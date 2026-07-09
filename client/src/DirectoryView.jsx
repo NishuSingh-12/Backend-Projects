@@ -42,8 +42,15 @@ function DirectoryView() {
    * Fetch directory contents
    */
   async function getDirectoryItems() {
-    const response = await fetch(`${BASE_URL}/directory/${dirId || ""}`);
+    const response = await fetch(`${BASE_URL}/directory/${dirId || ""}`, {
+      credentials: "include",
+    });
     const data = await response.json();
+
+    if (response.status === 401) {
+      navigate("/login");
+      return;
+    }
 
     // Set directory name
     if (data.name) {
@@ -172,8 +179,8 @@ function DirectoryView() {
     // Mark it as isUploading: true
     setFilesList((prev) =>
       prev.map((f) =>
-        f.id === currentItem.id ? { ...f, isUploading: true } : f
-      )
+        f.id === currentItem.id ? { ...f, isUploading: true } : f,
+      ),
     );
 
     // Start upload
@@ -253,6 +260,7 @@ function DirectoryView() {
       headers: {
         dirname: newDirname,
       },
+      credentials: "include",
     });
     setNewDirname("New Folder");
     setShowCreateDirModal(false);
