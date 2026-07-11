@@ -1,16 +1,1 @@
-[
-  {
-    "id": "d1b70629-3752-420d-a243-ca0349c33a87",
-    "name": "Nishu singh",
-    "email": "nishu@gmail.com",
-    "password": "abcd",
-    "rootDirId": "92b43287-c052-43a2-bfdb-984097474c17"
-  },
-  {
-    "id": "35028774-3bec-477f-bfa9-6909f55a1784",
-    "name": "Jayendra singh",
-    "email": "jay@gmail.com",
-    "password": "1234",
-    "rootDirId": "23110ddb-f8fa-4274-a3b0-0b78de58ca56"
-  }
-]
+[{"id":"6d463382-7542-40fd-b094-d4009f299aca","name":"Nishu singh","email":"nishu@gmail.com","password":"abcd","rootDirId":"fe2bd8cb-68ce-4ef0-8812-c3b8d3b9c1db"}]
