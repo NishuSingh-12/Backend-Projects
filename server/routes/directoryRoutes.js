@@ -11,6 +11,8 @@ router.param("id", validateIdMiddleware);
 
 // Read
 router.get("/:id?", async (req, res) => {
+  const db = req.db;
+  console.log(db);
   const user = req.user;
   const id = req.params.id || user.rootDirId;
 
