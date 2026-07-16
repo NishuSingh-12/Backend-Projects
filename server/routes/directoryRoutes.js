@@ -26,14 +26,17 @@ router.get("/:id?", async (req, res) => {
       .json({ error: "Directory not found or you do not have access to it!" });
   }
 
-  const files = [];
+  const files = await db
+    .collection("files")
+    .find({ parentDirId: directoryData._id })
+    .toArray();
   const directories = await dirCollection
     .find({ parentDirId: new ObjectId(id) })
     .toArray();
 
   return res.status(200).json({
     ...directoryData,
-    files,
+    files: files.map((dir) => ({ ...dir, id: dir._id })),
     directories: directories.map((dir) => ({ ...dir, id: dir._id })),
   });
 });
