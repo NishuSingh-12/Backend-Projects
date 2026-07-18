@@ -57,9 +57,15 @@ router.post("/:parentDirId?", async (req, res, next) => {
       userId: user._id,
     });
 
-    return res.status(200).json({ message: "Directory Created!" });
+    return res.status(201).json({ message: "Directory Created!" });
   } catch (err) {
-    next(err);
+    if (err.code === 121) {
+      res
+        .status(400)
+        .json({ error: "Invalid input, please enter valid details" });
+    } else {
+      next(err);
+    }
   }
 });
 

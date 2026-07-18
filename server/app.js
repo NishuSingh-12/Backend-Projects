@@ -17,7 +17,7 @@ try {
     cors({
       origin: "http://localhost:5173",
       credentials: true,
-    }),
+    })
   );
 
   app.use((req, res, next) => {
@@ -31,7 +31,7 @@ try {
 
   app.use((err, req, res, next) => {
     console.log(err);
-    res.status(err.status || 500).json({ error: "Something went wrong!!" });
+    res.status(err.status || 500).json({ error: "Something went wrong!" });
   });
 
   app.listen(4000, () => {
