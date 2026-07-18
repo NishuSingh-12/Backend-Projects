@@ -5,7 +5,7 @@ import directoryRoutes from "./routes/directoryRoutes.js";
 import fileRoutes from "./routes/fileRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import checkAuth from "./middlewares/authMiddleware.js";
-import { connectDB } from "./db.js";
+import { connectDB } from "./config/db.js";
 
 try {
   const db = await connectDB();
@@ -17,12 +17,14 @@ try {
     cors({
       origin: "http://localhost:5173",
       credentials: true,
-    }),
+    })
   );
+
   app.use((req, res, next) => {
     req.db = db;
     next();
   });
+
   app.use("/directory", checkAuth, directoryRoutes);
   app.use("/file", checkAuth, fileRoutes);
   app.use("/user", userRoutes);

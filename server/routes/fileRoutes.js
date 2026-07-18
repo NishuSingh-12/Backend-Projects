@@ -10,13 +10,10 @@ const router = express.Router();
 router.param("parentDirId", validateIdMiddleware);
 router.param("id", validateIdMiddleware);
 
-// ================================
-// CREATE
-// ================================
 router.post("/:parentDirId?", async (req, res, next) => {
   const db = req.db;
   const dirCollection = db.collection("directories");
-  const filesCollection = db.collection("files");
+  const filesCollection = await db.collection("files");
   const parentDirId = req.params.parentDirId || req.user.rootDirId;
   const parentDirData = await dirCollection.findOne({
     _id: new ObjectId(parentDirId),
@@ -30,6 +27,7 @@ router.post("/:parentDirId?", async (req, res, next) => {
 
   const filename = req.headers.filename || "untitled";
   const extension = path.extname(filename);
+
   const insertedFile = await filesCollection.insertOne({
     extension,
     name: filename,
@@ -37,22 +35,22 @@ router.post("/:parentDirId?", async (req, res, next) => {
     userId: req.user._id,
   });
   const fileId = insertedFile.insertedId.toString();
+
   const fullFileName = `${fileId}${extension}`;
+
   const writeStream = createWriteStream(`./storage/${fullFileName}`);
   req.pipe(writeStream);
 
   req.on("end", async () => {
     return res.status(201).json({ message: "File Uploaded" });
   });
-  req.on("err", async () => {
+
+  req.on("error", async () => {
     await filesCollection.deleteOne({ _id: insertedFile.insertedId });
-    return res.status(404).json({ message: "Could Not  Upload File!" });
+    return res.status(404).json({ message: "Could not Upload File" });
   });
 });
 
-// ================================
-// READ
-// ================================
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const db = req.db;
@@ -61,7 +59,6 @@ router.get("/:id", async (req, res) => {
     _id: new ObjectId(id),
     userId: req.user._id,
   });
-
   // Check if file exists
   if (!fileData) {
     return res.status(404).json({ error: "File not found!" });
@@ -69,8 +66,8 @@ router.get("/:id", async (req, res) => {
 
   // If "download" is requested, set the appropriate headers
   const filePath = `${process.cwd()}/storage/${id}${fileData.extension}`;
+
   if (req.query.action === "download") {
-    // res.set("Content-Disposition", `attachment; filename=${fileData.name}`);
     return res.download(filePath, fileData.name);
   }
 
@@ -82,9 +79,6 @@ router.get("/:id", async (req, res) => {
   });
 });
 
-// ================================
-// UPDATE
-// ================================
 router.patch("/:id", async (req, res, next) => {
   const { id } = req.params;
   const db = req.db;
@@ -99,11 +93,10 @@ router.patch("/:id", async (req, res, next) => {
     return res.status(404).json({ error: "File not found!" });
   }
 
-  // Perform rename
   try {
     await filesCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { name: req.body.newFilename } },
+      { $set: { name: req.body.newFilename } }
     );
     return res.status(200).json({ message: "Renamed" });
   } catch (err) {
@@ -112,9 +105,6 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
-// ================================
-// DELETE
-// ================================
 router.delete("/:id", async (req, res, next) => {
   const { id } = req.params;
   const db = req.db;
@@ -125,7 +115,7 @@ router.delete("/:id", async (req, res, next) => {
   });
 
   if (!fileData) {
-    return res.status(404).json({ error: "File Not Found!" });
+    return res.status(404).json({ error: "File not found!" });
   }
 
   try {
